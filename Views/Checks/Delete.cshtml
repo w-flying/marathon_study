@@ -1,0 +1,57 @@
+﻿@model marathon.Models.Check
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>删除</h1>
+
+<h3>是否确定删除/h3>
+<div>
+    <h4>检查</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Health)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Health)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MarathonClass)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MarathonClass)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Experience)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Experience)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CheckState)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CheckState)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.User.UserName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Marathonentity)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Marathonentity.MarathonName)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

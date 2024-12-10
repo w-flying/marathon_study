@@ -1,0 +1,105 @@
+﻿@model IEnumerable<marathon.Models.Marathonentity>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link href="~/css/img.css" rel="stylesheet" />
+<p>
+    <a asp-action="Create">新增赛事</a>
+</p>
+<table class="table" id="mytable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MarathonName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MarathonData)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MarathonPlace)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MarathonDetails)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MarathonSponsor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Manager.ManagerId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+                <td>
+                    <div class="img_contain">
+                        <img src="@Url.Action("GetImage","Marathonentities",new { MaratnonId = item.MarathonId})" alt="未上传图片"  />
+                    </div>
+                    
+                </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.MarathonName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MarathonData)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MarathonPlace)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MarathonDetails)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MarathonSponsor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Manager.ManagerName)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.MarathonId"><button class="btn btn-secondary">编辑</button></a> |
+                    <a asp-action="Details" asp-route-id="@item.MarathonId"><button class="btn btn-info">详情</button></a> |
+                    <a asp-action="Delete" asp-route-id="@item.MarathonId"><button class="btn btn-danger">删除</button></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+@section Scripts {
+    <link rel="stylesheet" href="~/datatables/datatables.min.css">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/datatables/datatables.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        var table = $('#mytable').DataTable({
+            search: {
+                return: true
+            },
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,  
+                "targets": 0
+            }],
+            "order": [[1, 'asc']]
+
+        });
+
+        table.on('order.dt search.dt',
+            function () {
+                table.column(0, {
+                    search: 'applied',
+                    order: 'applied'
+                });
+            }).draw();
+    });
+    </script>
+
+}

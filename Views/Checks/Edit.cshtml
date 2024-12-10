@@ -1,0 +1,57 @@
+﻿@model marathon.Models.Check
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>编辑</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+@*             <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <select asp-for="UserName" class="form-control" asp-items="ViewBag.UserName"></select>
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarathonId" class="control-label"></label>
+                <select asp-for="MarathonId" class="form-control" asp-items="ViewBag.MarathonId"></select>
+                <span asp-validation-for="MarathonId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Health" class="control-label"></label>
+                <select asp-for="Health" class="form-control"></select>
+                <span asp-validation-for="Health" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarathonClass" class="control-label"></label>
+                <select asp-for="MarathonClass" class="form-control"></select>
+                <span asp-validation-for="MarathonClass" class="text-danger"></span>
+            </div *@
+            <div class="form-group">
+                <label asp-for="Experience" class="control-label"></label>
+                <input asp-for="Experience" class="form-control" />
+                <span asp-validation-for="Experience" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckState" class="control-label"></label>
+                <input asp-for="CheckState" class="form-control" />
+                <span asp-validation-for="CheckState" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">返回</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

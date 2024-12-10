@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Marathon.Models.Post>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@{
+    ViewData["Title"] = "Index";
+    byte[] user;
+    _httpContextAccessor.HttpContext.Session.TryGetValue("User", out user);
+
+
+}
+<link href="~/css/styles3.css" rel="stylesheet" />
+<div class="container">
+
+    <main>
+        @foreach(var item in Model)
+        {
+            <article>
+                <section class="content">
+                    <i class="fa-solid fa-quote-left"></i>
+                    <p class="desc">
+                        @Html.DisplayFor(modelItem => item.Content)
+                    </p>
+                    <p class="author">@Html.DisplayFor(modelItem => item.User.Name) &emsp;@Html.DisplayFor(modelItem => item.Create_time)</p>
+                    </section>
+                <section class="media">
+                    <img src="@Url.Action("GetImage","Users",new { username= item.User.UserName})" alt="未上传图片" />
+					</section>
+
+            </article>
+        }
+        
+        @{
+            Post post_model = new Post();
+            post_model.User_id = "@(user == null ? '' : System.Text.Encoding.Default.GetString(user))";
+                <form class="mb-3" asp-action="Create" asp-controller="Posts" id="myform">
+                    <div class="form-group">
+                        <label for="comment">发表你的观点</label>
+                        <textarea name="content" class="form-control" id="comment" rows="10" placeholder="把你的感受分享出去吧" required></textarea>
+                    </div>
+                <input type="text" name="id" style="display: none;" value="@(user == null ? "" : System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(System.Convert.ToBase64String(user))))" />
+                    <button type="submit" class="btn btn-primary " id="sub">发表</button>
+                    <button type="reset" class="btn btn-danger">重置</button>
+                </form>
+        }
+    </main>
+
+
+</div>
+

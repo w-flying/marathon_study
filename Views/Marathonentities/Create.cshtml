@@ -1,0 +1,76 @@
+﻿@model marathon.Models.Marathonentity
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>新建赛事</h1>
+<link href="~/css/img.css" rel="stylesheet" />
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MarathonName" class="control-label"></label>
+                <input asp-for="MarathonName" class="form-control" />
+                <span asp-validation-for="MarathonName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarathonData" class="control-label"></label>
+                <input asp-for="MarathonData" class="form-control" />
+                <span asp-validation-for="MarathonData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarathonPlace" class="control-label"></label>
+                <input asp-for="MarathonPlace" class="form-control" />
+                <span asp-validation-for="MarathonPlace" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarathonDetails" class="control-label"></label>
+                <input asp-for="MarathonDetails" class="form-control" />
+                <span asp-validation-for="MarathonDetails" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input type="file" class="form-control-file" id="user-photo" name="image" accept="image/*">
+                <div id="show-picture" class="img_contain"></div>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarathonSponsor" class="control-label"></label>
+                <input asp-for="MarathonSponsor" class="form-control" />
+                <span asp-validation-for="MarathonSponsor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ManagerId" class="control-label"></label>
+                <select asp-for="ManagerId" class ="form-control" asp-items="ViewBag.ManagerId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    var getUserPhoto = document.getElementById("user-photo");
+    getUserPhoto.onchange = function () {
+        var file = this.files;
+        console.log(file);
+        var reader = new FileReader();
+        reader.readAsDataURL(file[0]);
+        reader.onload = function () {
+            var image = document.createElement("img");
+            image.width = "400";
+            image.src = reader.result;
+            var showPicture = document.getElementById("show-picture");
+            showPicture.append(image);
+        };
+    };
+</script>
+<div>
+    <a asp-action="Index">返回</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

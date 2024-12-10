@@ -1,0 +1,189 @@
+﻿@model IEnumerable<marathon.Models.Check>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    <a asp-action="Create">新建报名</a>
+</p>
+
+<style type="text/css">
+    #mytable {
+        table-layout: fixed;
+    }
+
+    #mytable th, td {
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -moz-text-overflow: ellipsis;
+    }
+
+    #mytable th:nth-child(1),
+            #mytable td:nth-child(1) {
+        width: 70px; /* 第一列的宽度 */
+    }
+
+            #mytable th:nth-child(6),
+            #mytable td:nth-child(6) {
+        width: 500px; /* 第二列的宽度 */
+
+    }
+
+            #mytable th:nth-child(8),
+            #mytable td:nth-child(8) {
+                width: 200px; /* 第二列的宽度 */
+</style>
+<table class="table" id="mytable">
+    <thead>
+        <tr>
+            <th>
+                <button id="choose">全选</button>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Marathonentity.MarathonName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Health)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MarathonClass)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Experience)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckState)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                    <input type="checkbox"  class="row-selector">
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Marathonentity.MarathonName)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Health)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MarathonClass)
+            </td>
+            <td>
+				@Html.DisplayFor(modelItem => item.Experience)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckState)
+            </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-secondary">审核</button></a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-danger">删除</button></a>
+                </td>
+                
+        </tr>
+}
+    </tbody>
+    <button id="bulk-action-btn">批量审核</button>
+</table>
+@section Scripts {
+    <link rel="stylesheet" href="~/datatables/datatables.min.css">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/datatables/datatables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#mytable').DataTable({
+                 "autoWidth": false,
+                search: {
+                    return: true
+                },
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,  // 修正了拼写错误
+                    "targets": 0
+                }],
+                "order": [[1, 'asc']]
+
+            });
+
+
+            table.on('order.dt search.dt',
+                function () {
+                    table.column(0, {
+                        search: 'applied',
+                        order: 'applied'
+                    });
+                }).draw();
+        });
+
+
+        $("#choose").click(function () {
+            var areAllChecked = true; // 在外部定义变量，并初始化为true
+            $("input[type='checkbox']").each(function () {
+                if (!$(this).is(':checked')) {
+                    areAllChecked = false; // 如果发现任何未选中的复选框，就设置为false
+                    return false; // 尽管这里return false会结束.each()的迭代，但通常不是必要的，因为我们已经设置了areAllChecked
+                }
+            });
+
+            if (areAllChecked) {
+                $("input[type='checkbox']").each(function () { $(this).prop("checked", false); })
+            } else {
+                $("input[type='checkbox']").each(function () { $(this).prop("checked", true); })
+            }
+        });
+        var selectedRows = []; // 用于存储选中行的数组
+        $('#bulk-action-btn').on('click', function () {
+            $("input[type='checkbox']").each(function () {
+                var row = $(this).closest('tr');
+                var rowData = $('#mytable').DataTable().row(row).data(); // 获取当前行的数据
+                if (this.checked) {
+                    console.log(this)
+                    selectedRows.push(rowData); // 选中时添加到数组中
+                } else {
+                    selectedRows = selectedRows.filter(function (item) {
+                        return item !== rowData; // 取消选中时从数组中移除
+                    });
+                }
+            });
+            for (var i = 0; i < selectedRows.length; i++) {
+                selectedRows[i][6] = "通过"; 
+            }
+            selectedRows.forEach(function (rowData) {
+                // 使用rowData执行你的批量操作
+                console.log(rowData[6])
+            });
+            var jsonrow = JSON.stringify(selectedRows);
+            // alert(selectedRows.length);
+            $.ajax({
+                url: '/Checks/DbContextTransaction', // 你的控制器和动作的URL
+                type: 'POST',
+                data: jsonrow, // 发送表单数据
+                contentType: 'application/json', // 发送的信息类型
+                dataType: 'html', // 预期服务器返回的数据类型
+                success: function (response) {
+                    // 处理成功的响应
+                    window.location = '/Checks/Index'
+                },
+                error: function (xhr, status, error) {
+                    // 处理错误
+                    console.error("Error: " + error);
+                }
+            });
+
+            
+        });
+    </script>
+}

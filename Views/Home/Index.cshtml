@@ -1,0 +1,400 @@
+﻿@model marathon.Models.Manager
+@{
+	ViewData["Title"] = "主页";
+}
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@{
+	byte[] user;
+	_httpContextAccessor.HttpContext.Session.TryGetValue("User", out user);
+}
+
+
+<aside class="control-sidebar control-sidebar-dark">
+
+
+
+
+
+	<!-- Control sidebar content goes here -->
+	<div class="p-3">
+		<dl class="row">
+			<dt class="col-sm-6">
+				@Html.DisplayNameFor(model => model.ManagerId)
+			</dt>
+			<dd class="col-sm-6">
+				@Html.DisplayFor(model => model.ManagerId)
+			</dd>
+			<dt class="col-sm-6">
+				@Html.DisplayNameFor(model => model.ManagerName)
+			</dt>
+			<dd class="col-sm-6">
+				@Html.DisplayFor(model => model.ManagerName)
+			</dd>
+		</dl>
+	</div>
+</aside>
+
+
+
+<div class="row">
+	<h1>
+		<center>
+			<span>
+				欢迎你 @(user == null ? "" : System.Text.Encoding.Default.GetString(user))!
+			</span>
+		</center>
+	</h1>
+
+
+	<center><h1>欢迎使用马拉松赛事管理系统</h1></center>
+
+
+	<div class="row">
+		<div class="col-lg-3 col-md-4 col-sm-6">
+			<div class="card mx-1">
+				<a asp-controller="Marathonentities" asp-action="Edit" asp-route-id="3"><img class="card-img-top img-fluid" src="~/images/run/marathon1.jpg"></a>
+				<div class="card-body">
+					<h2 class="card-title">武汉马拉松</h2>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-4 col-sm-6">
+			<div class="card mx-1">
+				<a asp-controller="Marathonentities" asp-action="Edit" asp-route-id="2">
+				<img class="card-img-top" src="~/images/run/marathon2.jpg"></a>
+				<div class="card-body">
+					<h2 class="card-title">杭州马拉松</h2>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-4 col-sm-6">
+			<div class="card mx-1">
+				<a asp-controller="Marathonentities" asp-action="Edit" asp-route-id="1">
+				<img class="card-img-top" src="~/images/run/marathon3.jpg"></a>
+				<div class="card-body">
+					<h2 class="card-title">郑州马拉松</h2>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-4 col-sm-6">
+			<div class="card mx-1">
+				<a asp-controller="Marathonentities" asp-action="Edit" asp-route-id="6">
+				<img class="card-img-top" src="~/images/run/marathon4.jpg"></a>
+				<div class="card-body">
+					<h2 class="card-title">厦门马拉松</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-6 offset-3">
+		<form>
+			<select name="gender" class="form-control" onchange="refresh(value);">
+				<option selected value=-1>全部人群</option>
+				<option value=0>男性</option>
+				<option value=1>女性</option>
+			</select>
+		</form>
+	</div>
+</div>
+<div class="row">
+	<div class="col-5 offset-1" id="1-left" style="height:400px;">
+		插入图表位置
+	</div>
+	<div class="col-5" id="1-right" style="height:400px;">
+	</div>
+</div>
+<div class="row">
+	<div class="col-5 offset-1" id="2-left" style="height:400px;width:600px z-index:10000;">
+	</div>
+	<div class="col-5" id="2-right" style="height:400px;">
+	</div>
+</div>
+
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$(".nav-sidebar").filter(".menu-open").removeClass("menu-open");
+			$(".nav-sidebar").filter(".active").removeClass("active");
+			var a;
+			$(".nav-sidebar a").each(function (i) {
+				if ($(this).attr('href').endsWith('Index')) {
+					a = $(this);
+				}
+			});
+			a.addClass("active");
+			a.parent().parent().parent().addClass("menu-open");
+		})
+	</script>
+	<script src="~/echarts/echarts.min.js"></script>
+	<script src="~/echarts/echarts-wordcloud.min.js"></script>
+	<script type="text/javascript">
+		var upperChart = echarts.init(document.getElementById('1-left'));
+		var bottomChart = echarts.init(document.getElementById('1-right'));
+		var wordChart = echarts.init(document.getElementById('2-left'));
+		var fenbu = echarts.init(document.getElementById('2-right'));
+		window.onload = function () {
+			$.ajax({
+				url: "/api/Values/",
+				type: "get",
+				dataType: "json",
+				success: function (data) {
+					upperChart.hideLoading();
+					upperChart.setOption({
+						title: {
+							text: "赛事报名情况"
+						},
+						legend: {
+							data: data.categories
+						},
+						xAxis: {
+							data: data.categories,
+							axisLabel: {
+								//x轴文字的配置
+								show: true,
+								interval: 0,//使x轴文字显示全
+							}
+
+						},
+						yAxis: {
+							type: 'value'
+						},
+						series: [{
+							// 根据名字对应到相应的系列
+							type: 'bar',
+							name: '赛事',
+							data: data.values
+						}]
+					}
+					)
+					bottomChart.hideLoading();
+					bottomChart.setOption({
+						title: {
+							text: "年龄分布"
+						},
+						legend: {
+							data: ['平均年龄']
+						},
+						xAxis: {
+							data: data.categories,
+							axisLabel: {
+								//x轴文字的配置
+								show: true,
+								interval: 0,//使x轴文字显示全
+							}
+
+						},
+						yAxis: { type: 'value' },
+						series: [{
+							// 根据名字对应到相应的系列
+							type: 'line',
+							name: '赛事',
+							data: data.data
+						}]
+					});
+					const wordOpt = {
+						title: {
+							text: "用户经历词云图"
+						},
+						tooltip: {
+							show: true
+						},
+						series: [
+							{
+								type: 'wordCloud', // 指定为词云图
+								gridSize: 5, // 网格大小
+								sizeRange: [10,30], // 字体大小范围
+								rotationRange: [-90,90], // 旋转角度范围
+								shape: 'circle', // 形状
+								drawOutOfBound: true, // 控制词云图是否允许词语超出绘制区域
+								left: 'center',
+								top: 'center',
+								width: '80%',
+								height: '80%',
+								textStyle: {
+									normal: {
+										color: function () {
+											// 随机颜色
+											return 'rgb(' + [
+												Math.round(Math.random() * 160),
+												Math.round(Math.random() * 160),
+												Math.round(Math.random() * 160)
+											].join(',') + ')';
+										}
+									},
+									emphasis: {
+										focus: 'self',
+										textStyle: {
+											fontSize: 60 // 点击的词放大
+										}
+									}
+
+								},
+								data: data.wordtfs,
+								emphasis: {
+									focus: 'descriptor',  // 当鼠标悬停在某个词上时，仅高亮该词，而不是放大
+									itemStyle: {
+										emphasis: {
+											shadowBlur: 10,
+											shadowColor: 'rgba(0, 0, 0, 0.5)'
+										}
+									}
+								}
+								// 其他配置项...
+							}
+						]
+					};
+					wordChart.setOption(wordOpt);
+					option = {
+						title: {
+							text: "管理员负责图"
+						},
+						legend: {
+							top: 'bottom'
+						},
+						toolbox: {
+							show: true,
+							feature: {
+								mark: { show: true },
+								dataView: { show: true, readOnly: false },
+								restore: { show: true },
+								saveAsImage: { show: true }
+							}
+						},
+						series: [
+							{
+								name: '管理员赛事负责数量图',
+								type: 'pie',
+								radius: [40, 100],
+								center: ['50%', '50%'],
+								roseType: 'area',
+								itemStyle: {
+									borderRadius: 8
+								},
+								data: data.manages.map(item => ({
+									value: item.managenum, // 词频
+									name: item.name
+								})),
+							}
+						]
+					};
+					fenbu.setOption(option);
+				}
+			});
+		}
+		function refresh(gender) {
+			upperChart.showLoading();
+			bottomChart.showLoading();
+			$.ajax({
+				url: "/api/values/" + gender,
+				type: "get",
+				dataType: "json",
+				success: function (data) {
+					upperChart.hideLoading();
+					upperChart.setOption({
+						title: {
+							text: "赛事报名情况"
+						},
+						legend: {
+							data: data.categories
+						},
+						xAxis: {
+							data: data.categories,
+							axisLabel: {
+								//x轴文字的配置
+								show: true,
+								interval: 0,//使x轴文字显示全
+							}
+
+						},
+						yAxis: {
+							type: 'value'
+						},
+						series: [{
+							// 根据名字对应到相应的系列
+							type: 'bar',
+							name: '赛事',
+							data: data.values
+						}]
+					}
+					)
+
+					bottomChart.hideLoading();
+					bottomChart.setOption({
+						title: {
+							text: "年龄分布"
+						},
+						legend: {
+							data: ['平均年龄']
+						},
+						xAxis: {
+							data: data.categories,
+							axisLabel: {
+								//x轴文字的配置
+								show: true,
+								interval: 0,//使x轴文字显示全
+							}
+
+						},
+						yAxis: {},
+						series: [{
+							type: 'line',
+							// 根据名字对应到相应的系列
+							name: '赛事',
+							data: data.data
+						}]
+					});
+					wordChart.hideLoading();
+					const wordOpt = {
+						series: [
+							{
+								type: 'wordCloud', // 指定为词云图
+								gridSize: 5, // 网格大小
+								sizeRange: [10, 30], // 字体大小范围
+								rotationRange: [-90, 90], // 旋转角度范围
+								shape: 'circle', // 形状
+								drawOutOfBound: true, // 控制词云图是否允许词语超出绘制区域
+								left: 'center',
+								top: 'center',
+								width: '80%',
+								height: '80%',
+								textStyle: {
+									normal: {
+										color: function () {
+											// 随机颜色
+											return 'rgb(' + [
+												Math.round(Math.random() * 160),
+												Math.round(Math.random() * 160),
+												Math.round(Math.random() * 160)
+											].join(',') + ')';
+										}
+									},
+									emphasis: {
+										shadowBlur: 10,
+										shadowColor: '#333'
+									}
+								},
+								data: data.wordtfs,
+								emphasis: {
+									focus: 'descriptor',  // 当鼠标悬停在某个词上时，仅高亮该词，而不是放大
+									itemStyle: {
+										emphasis: {
+											shadowBlur: 10,
+											shadowColor: 'rgba(0, 0, 0, 0.5)'
+										}
+									}
+								}
+							}
+						]
+					};
+					wordChart.setOption(wordOpt);
+				}
+			});
+		};
+	</script>
+}
+

@@ -1,0 +1,191 @@
+﻿@model marathon.Models.Manager;
+@{
+	ViewData["Title"] = "用户登录";
+}
+
+<head>
+
+	<style type="text/css">
+		html {
+			overflow-y: scroll;
+			vertical-align: baseline;
+		}
+
+		body {
+			font-family: Microsoft YaHei,Segoe UI,Tahoma,Arial,Verdana,sans-serif;
+			font-size: 12px;
+			color: #fff;
+			height: 100%;
+			line-height: 1;
+		}
+
+		* {
+			margin: 0;
+			padding: 0
+		}
+
+		ul, li {
+			list-style: none
+		}
+
+		h1 {
+			font-size: 30px;
+			font-weight: 700;
+			text-shadow: 0 1px 4px rgba(0,0,0,.2)
+		}
+
+		.login-box {
+			z-index: 10;
+			width: 600px;
+			margin: 120px auto 0 auto;
+			text-align: center;
+			padding: 50px;
+			background-color: gray;
+			border-radius: 10px;
+		}
+
+			.login-box .name, .login-box .password, .login-box .code, .login-box .remember {
+				font-size: 20px;
+				text-shadow: 0 1px 2px rgba(0,0,0,.1)
+			}
+
+			.login-box #code {
+				margin-left: 20px;
+				width: 100px;
+				font-size: large;
+				right: 0;
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+
+		input[type=text], input[type=password] {
+			height: 42px;
+			width: 300px;
+			margin-top: 25px;
+			padding: 0px 15px;
+			border: 1px solid rgba(255,255,255,.15);
+			border-radius: 6px;
+			color: black;
+			letter-spacing: 2px;
+			font-size: 16px;
+			background: transparent;
+		}
+
+		button, .zhuce {
+			margin-top: 10px;
+			cursor: pointer;
+			width: 100%;
+			height: 44px;
+			padding: 0;
+			background: #ef4300;
+			border: 1px solid #ff730e;
+			border-radius: 6px;
+			font-weight: 700;
+			color: #fff;
+			font-size: 24px;
+			letter-spacing: 15px;
+			text-shadow: 0 1px 2px rgba(0,0,0,.1)
+		}
+
+		input:focus {
+			outline: none;
+			box-shadow: 0 2px 3px 0 rgba(220,220,220,0.6) inset,0 2px 7px 0 rgba(220,220,220,0.6);
+			background-color: white;
+		}
+
+		button:hover {
+			box-shadow: 0 15px 30px 0 rgba(255,255,255,.15) inset,0 2px 7px 0 rgba(0,0,0,.2)
+		}
+
+		.login-box label {
+			width: 90px;
+			margin-left: 20px;
+			text-align: left;
+		}
+
+		.login {
+			margin-top: 10px;
+		}
+
+		}
+	</style>
+
+	<script type="text/javascript">
+		function createCode() { //创建验证码
+			code = "";
+			var codeLength = 4;//验证码的长度
+			var checkCode = document.getElementById("code");
+			var random = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+				'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');//随机数
+			for (var i = 0; i < codeLength; i++) {//循环操作
+				var index = Math.floor(Math.random() * 36);//取得随机数的索引（0~35）
+				code += random[index];//根据索引取得随机数加到code上
+			}
+			checkCode.value = code;//把code值赋给验证码
+		}
+	</script>
+	<script type="text/javascript">
+		function createCode() { //创建验证码
+			code = "";
+			var codeLength = 4;//验证码的长度
+			var checkCode = document.getElementById("code");
+			var random = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+				'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');//随机数
+			for (var i = 0; i < codeLength; i++) {//循环操作
+				var index = Math.floor(Math.random() * 36);//取得随机数的索引（0~35）
+				code += random[index];//根据索引取得随机数加到code上
+			}
+			checkCode.value = code;//把code值赋给验证码
+		};
+		function testcode() {//验证码验证
+			var inputCode = document.getElementById("inputcode").value.toUpperCase(); //取得输入的验证码并转化为大写
+			var code = document.getElementById("code").value;
+			if (inputCode.length <= 0) { //若输入的验证码长度为0
+				alert("请输入验证码！"); //则弹出请输入验证码
+				return false;
+			} else if (inputCode != code) { //若输入的验证码与产生的验证码不一致时
+				alert("验证码输入错误！"); //则弹出验证码输入错误
+				createCode();//刷新验证码
+				document.getElementById("inputcode").value = "";//清空文本框
+				return false;
+			} else { return true; }
+
+		}
+	</script>
+
+</head>
+<div class="login-box">
+	<h1>马拉松赛事管理系统后台</h1>
+	<h2>@ViewBag.Login</h2>
+	<form asp-action="managerlog" method="post" class="form-horizontal" role="form" onsubmit="return testcode()">
+		<div class="name">
+			<label>账号：</label>
+			<input asp-for="ManagerId" type="text" />
+		</div>
+		<div class="password">
+			<label>密码</label>
+			<input asp-for="PassWord" type="password" maxlength="16" id="" />
+		</div>
+		<div class="code">
+			<label>验证码：</label>
+			<input type="text" name="" maxlength="4" id="inputcode" /><br />
+			<input value="HU9P" type="button" id="code" onclick="createCode()"
+				   title='点击更换验证码' />
+		</div>
+		<div class="login">
+			<button type="submit">管理员登录</button>
+			<a asp-action="Index" class="btn zhuce">用户登录页</a>
+
+		</div>
+	</form>
+
+
+</div>
+
+
+
+
+
+
+
+

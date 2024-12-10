@@ -1,0 +1,38 @@
+﻿
+/* Carousel styling */
+#introCarousel,
+.carousel-inner,
+.carousel-item,
+.carousel-item.active {
+    height: 100vh;
+}
+
+    .carousel-item:nth-child(1) {
+        background-image: url('../images/marathon1.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+    }
+
+    .carousel-item:nth-child(2) {
+        background-image: url('../images/marathon2.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+    }
+
+    .carousel-item:nth-child(3) {
+        background-image: url('../images/marathon3.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+    }
+
+.navbar .nav-link {
+    color: black !important;
+}
+@media (min-width: 992px) {
+    #introCarousel {
+        margin-top: -80px ;
+    }
+}

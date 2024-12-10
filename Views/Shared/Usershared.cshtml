@@ -1,0 +1,151 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@{
+    byte[] user;
+    _httpContextAccessor.HttpContext.Session.TryGetValue("User", out user);
+}
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Marathonuser</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Marathonuser.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.staticfile.net/font-awesome/6.0.0/css/all.css">
+    <!--  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css" />-->
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+    <!-- MDB -->
+    <link href="~/css/mdb.min.css" rel="stylesheet" />
+    <link href="~/css/turnpicture.css" rel="stylesheet" />
+    <style>
+        input[type="file"]::file-selector-button {
+            font-weight: 500;
+            color: #fff;
+            background-color: #409eff;
+            border-color: #409eff;
+            border: #398bff;
+            height: 30px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .niceButton3 {
+            background-color: #1795bb;
+            border-radius: 12px;
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+            .niceButton3:hover {
+                background-color: #fff;
+                color: #1795bb;
+                border: 1px solid #ccc;
+            }
+
+    </style>
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark d-none d-lg-block" style="z-index: 2000;">
+            <div class="container-fluid">
+                <!-- Navbar brand -->
+                <a class="navbar-brand nav-link" asp-area="" asp-controller="UserHome" asp-action="Index">
+                    <strong>马拉松赛事系统</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <button class="navbar-toggler" type="button" data-mdb-collapse-init data-mdb-target="#navbarExample01"
+                        aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarExample01">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item active">
+                            <a class="nav-link" aria-current="page" asp-area="" asp-controller="UserHome" asp-action="Index">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Details" asp-route-id="@(user == null ? "" : System.Text.Encoding.Default.GetString(user))">个人中心</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Checks" asp-action="UserIndex">赛事报名</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Posts" asp-action="Index" asp-route-id="@(user == null ? "" : System.Text.Encoding.Default.GetString(user))">交流论坛</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav list-inline">
+                        <!-- Icons -->
+                        <li class="">
+                            <a class="nav-link" href="https://www.zhihu.com/" rel="nofollow"
+                               target="_blank">
+                                <i class="fab fa-zhihu" /></i>
+
+                            </a>
+                        </li>
+                        <li class="">
+                            <a class="nav-link" href="https://www.douyin.com/" rel="nofollow" target="_blank">
+                                <i class="fab fa-tiktok" /></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://wx.qq.com/" rel="nofollow" target="_blank">
+                                <i class="fab fa-weixin" /></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://im.qq.com/pcqq" rel="nofollow" target="_blank">
+                                <i class="fab fa-qq" /></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </header>
+</head>
+
+
+
+
+<body>
+
+
+    @RenderBody()
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/0.1.0-beta.5/libs/cn/index.js"></script>
+    <script>
+        new CozeWebSDK.WebChatClient({
+            config: {
+                bot_id: '7400372740748066816',
+            },
+            componentProps: {
+                title: 'Coze',
+            },
+        });
+    </script>
+</body>
+</html>
+

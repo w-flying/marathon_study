@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Marathon.Models.Post>
+
+@{
+    ViewData["Title"] = "用户管理";
+    Layout = "_layout";
+}
+<link href="~/css/img.css" rel="stylesheet" />
+
+<script src="~/echarts/echarts.min.js"></script>
+
+
+<table class="table" id="mytable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Create_time)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Name)
+                </td>
+                <td style="width:min-content">
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Create_time)
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Post_Id"><button class="btn btn-danger">删除</button></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <link rel="stylesheet" href="~/datatables/datatables.min.css">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/datatables/datatables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#mytable').DataTable({
+                search: {
+                    return: true
+                },
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,  // 修正了拼写错误
+                    "targets": 0
+                }],
+                "order": [[1, 'asc']]
+
+            });
+
+            table.on('order.dt search.dt',
+                function () {
+                    table.column(0, {
+                        search: 'applied',
+                        order: 'applied'
+                    });
+                }).draw();
+        });
+    </script>
+
+}

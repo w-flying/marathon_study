@@ -1,0 +1,70 @@
+﻿@model IEnumerable<marathon.Models.Manager>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    <a asp-action="Create">新增管理员</a>
+</p>
+<table class="table" id="mytable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ManagerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManagerName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.ManagerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ManagerName)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.ManagerId"><button class="btn btn-secondary">编辑</button></a> |
+                    <a asp-action="Delete" asp-route-id="@item.ManagerId"><button class="btn btn-danger">删除</button></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+@section Scripts {
+    <link rel="stylesheet" href="~/datatables/datatables.min.css">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/datatables/datatables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#mytable').DataTable({
+                search: {
+                    return: true
+                },
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                }],
+                "order": [[1, 'asc']]
+
+            });
+
+            table.on('order.dt search.dt',
+                function () {
+                    table.column(0, {
+                        search: 'applied',
+                        order: 'applied'
+                    });
+                }).draw();
+        });
+    </script>
+
+}

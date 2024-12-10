@@ -1,0 +1,183 @@
+﻿@model marathon.Models.User;
+
+@{
+	Layout = "Usershared";
+}
+<head>
+
+	<style type="text/css">
+		html {
+			overflow-y: scroll;
+			vertical-align: baseline;
+		}
+
+		body {
+			font-family: Microsoft YaHei,Segoe UI,Tahoma,Arial,Verdana,sans-serif;
+			font-size: 12px;
+			color: #fff;
+			height: 100%;
+			line-height: 1;
+		}
+
+		* {
+			margin: 0;
+			padding: 0
+		}
+
+		ul, li {
+			list-style: none
+		}
+
+		h1 {
+			font-size: 30px;
+			font-weight: 700;
+			text-shadow: 0 1px 4px rgba(0,0,0,.2)
+		}
+
+		.login-box .form-group{
+			text-align:left;
+		}
+		.login-box {
+			z-index:10;
+			width:600px;
+			margin: 120px auto 0 auto;
+			text-align: center;
+			padding: 50px;
+			background-color:gray;
+			border-radius: 10px;
+			font-size:large;
+			
+		}
+
+			.login-box .name, .login-box .password{
+				font-size: 20px;
+				text-shadow: 0 1px 2px rgba(0,0,0,.1)
+			}
+
+
+		input[type=text], input[type=password] {
+			height: 42px;
+			width:300px;
+			margin-top: 25px;
+			padding: 0px 15px;
+			border: 1px solid rgba(255,255,255,.15);
+			border-radius: 6px;
+			color:black;
+			letter-spacing: 2px;
+			font-size: 16px;
+			background: transparent;
+		}
+
+		button, .sigh{
+			cursor: pointer;
+			margin-top:10px;
+			width: 100%;
+			height: 44px;
+			padding: 0;
+			background: #ef4300;
+			border: 1px solid #ff730e;
+			border-radius: 6px;
+			font-weight: 700;
+			color: #fff;
+			font-size: 24px;
+			letter-spacing: 15px;
+			text-shadow: 0 1px 2px rgba(0,0,0,.1)
+		}
+
+		input:focus {
+			outline: none;
+			box-shadow: 0 2px 3px 0 rgba(220,220,220,0.6) inset,0 2px 7px 0 rgba(220,220,220,0.6);
+			background-color:white;
+		}
+
+		button:hover {
+			box-shadow: 0 15px 30px 0 rgba(255,255,255,.15) inset,0 2px 7px 0 rgba(0,0,0,.2)
+		}
+
+		.login-box label{
+			width:90px;
+			margin-left:40px;
+			text-align:left;
+			
+		}
+		.login{
+			margin-top:10px;
+		}
+
+		.img_contain img{
+			margin-left:20%;
+		}
+
+		#user-photo{
+			margin-top:20px;
+		}
+	
+	</style>
+
+
+</head>
+
+<link href="~/css/img.css" rel="stylesheet" />
+		<div class="login-box">
+			<h2>欢迎加入马拉松赛事系统</h2>
+	<form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" ></label>
+                <input asp-for="UserName"  />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassWord"> </label>
+                <input asp-for="PassWord" />
+                <span asp-validation-for="PassWord" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" ></label>
+                <input asp-for="Name"  />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gender" ></label>
+                <select asp-for="Gender"  asp-items="ViewBag.Gender"></select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Age" ></label>
+                <input asp-for="Age"  />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" ></label>
+                <input asp-for="PhoneNumber" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+		<div class="form-group">
+			<label asp-for="Image" class="control-label"></label>
+			<input type="file" class="form-control-file" id="user-photo" name="image" accept="image/*">
+			<div id="show-picture" class="img_contain" ></div>
+		</div>
+            <div class="form-group">
+			<button type="submit">注册</button>
+			<a href="javascript:history.back()" class="btn sigh">登录</a>
+
+            </div>
+        </form>
+    </div>
+
+<script>
+	var getUserPhoto = document.getElementById("user-photo");
+	getUserPhoto.onchange = function () {
+		var file = this.files;
+		console.log(file);
+		var reader = new FileReader();
+		reader.readAsDataURL(file[0]);
+		reader.onload = function () {
+			var image = document.createElement("img");
+			image.width = "400";
+			image.src = reader.result;
+			var showPicture = document.getElementById("show-picture");
+			showPicture.append(image);
+		};
+	};
+</script>
